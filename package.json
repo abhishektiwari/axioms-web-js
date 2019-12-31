@@ -1,0 +1,62 @@
+{
+    "name": "@axioms/web-js",
+    "version": "0.0.4",
+    "description": "Axioms Javascript client for web applications including Single Page Applications such as Vue, Angular, and React",
+    "main": "./lib/index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "build": "npx babel src --out-dir lib"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/axioms-io/web-js.git"
+    },
+    "dependencies": {
+        "base64url": "^3.0.1",
+        "core-js": "^3.4.3",
+        "js-cookie": "^2.2.1",
+        "jwk-to-pem": "^2.0.2",
+        "jws": "^3.2.2",
+        "lodash": "^4.17.15",
+        "nanoid": "^2.1.7",
+        "qs": "^6.7.0",
+        "request": "^2.88.0"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.5.5",
+        "@babel/preset-env": "^7.5.5",
+        "@babel/cli": "^7.5.5",
+        "chai": "^4.2.0",
+        "eslint": "^6.0.1",
+        "expect.js": "^0.3.1",
+        "mocha": "^6.2.2",
+        "prettier": "^1.18.2",
+        "sinon": "^8.0.2"
+    },
+    "babel": {
+        "presets": [
+            "@babel/preset-env"
+        ]
+    },
+    "keywords": [
+        "iam",
+        "jwt",
+        "oauth2",
+        "openid",
+        "sso",
+        "authn",
+        "authz",
+        "authentication",
+        "authorization",
+        "access",
+        "token",
+        "id",
+        "token"
+    ],
+    "author": "Abhishek Tiwari @ Axioms",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/axioms-io/web-js/issues"
+    },
+    "homepage": "https://github.com/axioms-io/web-js/blob/master/README.md"
+}
