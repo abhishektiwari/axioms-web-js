@@ -20,7 +20,8 @@
         "lodash": "^4.17.15",
         "nanoid": "^2.1.7",
         "qs": "^6.7.0",
-        "request": "^2.88.0"
+        "request": "^2.88.0",
+        "url-join": "^4.0.1"
     },
     "devDependencies": {
         "@babel/core": "^7.5.5",
