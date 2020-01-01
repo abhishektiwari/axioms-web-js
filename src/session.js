@@ -1,4 +1,7 @@
-import { Cookie, Cookies } from 'js-cookie';
+import {
+    Cookie,
+    Cookies
+} from 'js-cookie';
 
 class AuthSession {
     constructor(config) {
@@ -55,11 +58,11 @@ class AuthSession {
     }
 
     get id_payload() {
-        return JSON.parse(this.getItem('_axioms.auth.payload'));
+        return JSON.parse(this.getItem('_axioms.auth.id_payload'));
     }
 
-    set id_payload(payload) {
-        this.saveItem('_axioms.auth.payload', JSON.stringify(payload));
+    set id_payload(id_payload) {
+        this.saveItem('_axioms.auth.id_payload', JSON.stringify(id_payload));
     }
 
     get id_exp() {
@@ -67,7 +70,15 @@ class AuthSession {
     }
 
     set id_exp(id_exp) {
-        this.saveItem('_axioms.auth.id_exp', JSON.stringify(id_exp));
+        this.saveItem('_axioms.auth.id_exp', id_exp);
+    }
+
+    get id_scope() {
+        return JSON.parse(this.getItem('_axioms.auth.id_scope'));
+    }
+
+    set id_scope(id_scope) {
+        this.saveItem('_axioms.auth.id_scope', id_scope);
     }
 
     get access_token() {
@@ -76,6 +87,38 @@ class AuthSession {
 
     set access_token(access_token) {
         this.saveItem('_axioms.auth.access_token', access_token);
+    }
+
+    get is_valid_access_token() {
+        return JSON.parse(this.getItem('_axioms.auth.is_valid_access_token'));
+    }
+
+    set is_valid_access_token(is_valid_access_token) {
+        this.saveItem('_axioms.auth.is_valid_access_token', is_valid_access_token);
+    }
+
+    get access_exp() {
+        return JSON.parse(this.getItem('_axioms.auth.access_exp'));
+    }
+
+    set access_exp(access_exp) {
+        this.saveItem('_axioms.auth.access_exp', access_exp);
+    }
+
+    get access_scope() {
+        return JSON.parse(this.getItem('_axioms.auth.access_scope'));
+    }
+
+    set access_scope(access_scope) {
+        this.saveItem('_axioms.auth.access_scope', access_scope);
+    }
+
+    get access_payload() {
+        return JSON.parse(this.getItem('_axioms.auth.access_payload'));
+    }
+
+    set access_payload(access_payload) {
+        this.saveItem('_axioms.auth.access_payload', JSON.stringify(access_payload));
     }
 
     get token_type() {
@@ -187,7 +230,6 @@ class AuthSession {
                 } else {
                     this.state = undefined
                 }
-
                 break;
             case 'code':
                 this.code = value;
@@ -254,5 +296,7 @@ class AuthSession {
     }
 }
 
-export { AuthSession };
+export {
+    AuthSession
+};
 export default AuthSession;
