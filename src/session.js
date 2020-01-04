@@ -106,7 +106,7 @@ class AuthSession {
     }
 
     get access_scope() {
-        return JSON.parse(this.getItem('_axioms.auth.access_scope'));
+        return this.getItem('_axioms.auth.access_scope');
     }
 
     set access_scope(access_scope) {
