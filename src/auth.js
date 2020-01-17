@@ -228,7 +228,6 @@ class Auth {
                 }
             })
             .catch(function(err) {
-                console.error("I was called 1");
                 console.error(err);
                 this.session.is_valid_id_token = false;
                 this.session.is_valid_access_token = false;
