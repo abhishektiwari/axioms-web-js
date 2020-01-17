@@ -1,11 +1,4 @@
 ## High 🚀
-
-- 📌 As a developer I should be able to use Axioms Auth using axioms-web-js package
-  - ⭕ Create a NPM package using authentication lib ✅
-  - ⭕ Add access token validity check
-  - ⭕ Add silent ID token refresh
-  - ⭕ Add silent Access token refresh
-  - ⭕ Add multi-tab support for session management
   
 ## Medium 🚄
 
@@ -17,3 +10,6 @@
   - https://stackoverflow.com/questions/29738381/how-to-publish-a-module-written-in-es6-to-npm
 
 ## Bugs 🐞
+
+Done: ✅
+Doing: 🚧

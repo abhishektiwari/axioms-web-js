@@ -1,3 +1,5 @@
+import 'core-js/features/promise';
+import "regenerator-runtime/runtime";
 import urljoin from 'url-join';
 import qs from 'qs';
 import request from 'request';

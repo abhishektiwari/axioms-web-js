@@ -1,6 +1,6 @@
 {
     "name": "@axioms/web-js",
-    "version": "0.0.8",
+    "version": "0.0.9",
     "description": "Axioms Javascript client for web applications including Single Page Applications such as Vue, Angular, and React",
     "main": "./lib/index.js",
     "scripts": {
@@ -20,6 +20,7 @@
         "lodash": "^4.17.15",
         "nanoid": "^2.1.7",
         "qs": "^6.7.0",
+        "regenerator-runtime": "^0.13.3",
         "request": "^2.88.0",
         "url-join": "^4.0.1"
     },
@@ -43,7 +44,9 @@
         "extends": [],
         "rules": {},
         "parserOptions": {
-            "parser": "babel-eslint"
+            "parser": "babel-eslint",
+            "sourceType": "module",
+            "ecmaVersion": 2018
         }
     },
     "babel": {
