@@ -54,8 +54,8 @@ class Auth {
         this.authorize_endpoint = `https://${this.config.axioms_domain}/oauth2/authorize`;
         this.jwks_endpoint = `https://${this.config.axioms_domain}/oauth2/.well-known/jwks.json`;
         this.logout_endpoint = `https://${this.config.axioms_domain}/oauth2/logout`;
-        this.user_settings_endpoint = `https://${this.config.axioms_domain}//user/settings/profile`;
-        this.user_password_endpoint = `https://${this.config.axioms_domain}//user/settings/password`;
+        this.user_settings_endpoint = `https://${this.config.axioms_domain}/user/settings/profile`;
+        this.user_password_endpoint = `https://${this.config.axioms_domain}/user/settings/password`;
 
         this.config = defaultsDeep(config, {
             login_type: "redirect",
