@@ -54,6 +54,8 @@ class Auth {
         this.authorize_endpoint = `https://${this.config.axioms_domain}/oauth2/authorize`;
         this.jwks_endpoint = `https://${this.config.axioms_domain}/oauth2/.well-known/jwks.json`;
         this.logout_endpoint = `https://${this.config.axioms_domain}/oauth2/logout`;
+        this.user_settings_endpoint = `https://${this.config.axioms_domain}//user/settings/profile`;
+        this.user_password_endpoint = `https://${this.config.axioms_domain}//user/settings/password`;
 
         this.config = defaultsDeep(config, {
             login_type: "redirect",
@@ -134,10 +136,18 @@ class Auth {
         );
     }
 
-    logout() {
+    logout_with_redirect() {
         let logout_url = this.logout_url();
         this.session.clear_all();
         return this.navigate_url(logout_url);
+    }
+
+    get_user_settings_url() {
+        return this.user_settings_endpoint;
+    }
+
+    get_user_password_url() {
+        return this.user_password_endpoint;
     }
 
     process_authorize_response() {
