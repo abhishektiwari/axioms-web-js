@@ -256,6 +256,44 @@ class AuthSession {
         }
     }
 
+    hasAccessScope(required_scopes) {
+        if (!this.access_scope) {
+            console.error("No access token with this session")
+            return false;
+        }
+        if (Array.isArray(required_scopes)) {
+            let given_scopes = this.access_scope.split(" ");
+            for (const scope of required_scopes) {
+                if (given_scopes.includes(scope)) {
+                    return true;
+                }
+            }
+            return false;
+        } else {
+            console.error("Please pass required scopes as an array. For example: ['profile', 'x:y']!")
+            return false;
+        }
+    }
+
+    hasIdScope(required_scopes) {
+        if (!this.id_scope) {
+            console.error("No id token with this session")
+            return false;
+        }
+        if (Array.isArray(required_scopes)) {
+            let given_scopes = this.id_scope.split(" ");
+            for (const scope of required_scopes) {
+                if (given_scopes.includes(scope)) {
+                    return true;
+                }
+            }
+            return false;
+        } else {
+            console.error("Please pass required scopes as an array. For example: ['profile', 'openid']!")
+            return false;
+        }
+    }
+
     clear_errors(storage_type = 'session') {
         switch (storage_type) {
             case 'cookie':
