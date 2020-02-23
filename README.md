@@ -31,16 +31,16 @@ const $auth = new Auth({
 
 # Standard functions and variables
 
-| Function/Object | Decscription | Examples |
+| Function/Object | Description | Examples |
 |-------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------|
 | `$auth.login_with_redirect()` | Login user with redirect to Axioms hosted login page |  |
 | `$auth.logoutWithRedirect()` | Logout user with redirect to Axioms hosted login page |  |
 | `$auth.session.is_authenticated()` | Check if user session is authenticated or not |  |
 | `$auth.get_user_password_url()` | Get user password reset URL if the tenant allows <br>username-password login. |  |
 | `$auth.get_user_settings_url()` | Get user settings URL where user can update profile <br>and multi-factor settings. |  |
-| `$auth.session.id_payload` | Get payload of ID Token and access individual attributes<br> by name | `$auth.session.id_payload.given_name`,<br>`$auth.session.id_payload.family_name`,<br>`$auth.session.id_payload.picture` |
+| `$auth.session.id_payload` | Get payload of access token and access individual attributes<br> by name | `$auth.session.id_payload.given_name`,<br>`$auth.session.id_payload.family_name`,<br>`$auth.session.id_payload.picture` |
 | `$auth.session.hasAccessScopeScope(required_scopes)` | Check if scope included in ID token matches with required <br>permissions. `required_scopes` must be an array <br>of strings representing the scopes assigned to resources | `['profile', 'openid']`,<br>`['profile', 'openid', 'tenant:owner']` |
-| `$auth.session.hasIdScope(required_scopes)` | Check if scope included in access token matches with required <br>permissions. `required_scopes` must be an array <br>of strings representing the scopes assigned to resources | `['profile', 'openid']`,<br>`['profile', 'openid', 'picture']` |
+| `$auth.session.hasIdScope(required_scopes)` | Check if scope included in id token matches with required <br>permissions. `required_scopes` must be an array <br>of strings representing the scopes assigned to resources | `['profile', 'openid']`,<br>`['profile', 'openid', 'picture']` |
 |  |  |  |
 ## Vue-specific usage
 For Vue specific usage please review [sample-vuejs](https://github.com/axioms-io/sample-vuejs)
@@ -53,6 +53,6 @@ For React specific usage please review [sample-react](https://github.com/axioms-
 
 `Coming soon`
 
-# Documentation
+# API Documentation
 
 `Coming soon`
