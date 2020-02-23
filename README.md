@@ -38,8 +38,8 @@ const $auth = new Auth({
 | `$auth.session.is_authenticated()` | Check if user session is authenticated or not |  |
 | `$auth.get_user_password_url()` | Get user password reset URL if the tenant allows <br>username-password login. |  |
 | `$auth.get_user_settings_url()` | Get user settings URL where user can update profile <br>and multi-factor settings. |  |
-| `$auth.session.id_payload` | Get payload of access token and access individual attributes<br> by name | `$auth.session.id_payload.given_name`,<br>`$auth.session.id_payload.family_name`,<br>`$auth.session.id_payload.picture` |
-| `$auth.session.hasAccessScopeScope(required_scopes)` | Check if scope included in ID token matches with required <br>permissions. `required_scopes` must be an array <br>of strings representing the scopes assigned to resources | `['profile', 'openid']`,<br>`['profile', 'openid', 'tenant:owner']` |
+| `$auth.session.id_payload` | Get payload of id token and access individual attributes<br> by name | `$auth.session.id_payload.given_name`,<br>`$auth.session.id_payload.family_name`,<br>`$auth.session.id_payload.picture` |
+| `$auth.session.hasAccessScopeScope(required_scopes)` | Check if scope included in access token matches with required <br>permissions. `required_scopes` must be an array <br>of strings representing the scopes assigned to resources | `['profile', 'openid']`,<br>`['profile', 'openid', 'tenant:owner']` |
 | `$auth.session.hasIdScope(required_scopes)` | Check if scope included in id token matches with required <br>permissions. `required_scopes` must be an array <br>of strings representing the scopes assigned to resources | `['profile', 'openid']`,<br>`['profile', 'openid', 'picture']` |
 |  |  |  |
 ## Vue-specific usage
