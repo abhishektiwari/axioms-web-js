@@ -34,7 +34,7 @@ const $auth = new Auth({
 | Function/Object | Description | Examples |
 |-------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------|
 | `$auth.login_with_redirect()` | Login user with redirect to Axioms hosted login page |  |
-| `$auth.logoutWithRedirect()` | Logout user with redirect to Axioms hosted login page |  |
+| `$auth.logout_with_redirect()` | Logout user with redirect to Axioms hosted login page |  |
 | `$auth.session.is_authenticated()` | Check if user session is authenticated or not |  |
 | `$auth.get_user_password_url()` | Get user password reset URL if the tenant allows <br>username-password login. |  |
 | `$auth.get_user_settings_url()` | Get user settings URL where user can update profile <br>and multi-factor settings. |  |
