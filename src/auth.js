@@ -1,14 +1,13 @@
 import AuthSession from "./session";
 import assign from "lodash/assign";
 import defaultsDeep from "lodash/defaultsDeep";
-import { create_url } from "./helper";
+import { create_url, base64URL } from "./helper";
 import nanoid from "nanoid";
 import qs from "qs";
 import jws from "jws";
 import axios from "axios";
 import jwktopem from "jwk-to-pem";
-import base64url from "base64url";
-import { sha256 } from 'js-sha256';
+import sha256 from 'crypto-js/sha256';
 
 class Auth {
     /**
@@ -86,7 +85,7 @@ class Auth {
         this.session.state = nanoid();
         this.session.nonce = nanoid();
         this.session.code_verifier = nanoid();
-        this.session.code_challenge = base64url(sha256(this.session.code_verifier));
+        this.session.code_challenge = base64URL(sha256(this.session.code_verifier));
 
         return create_url(
             this.authorize_endpoint,
@@ -101,7 +100,7 @@ class Auth {
                 prompt: this.prompt_options.includes(prompt) ? prompt : undefined,
                 org_hint: org_hint ? org_hint : undefined,
                 code_challenge: this.authorization_code ? this.session.code_challenge : undefined,
-                code_challenge_method: this.authorization_code ? 'SHA256' : undefined
+                code_challenge_method: this.authorization_code ? 'S256' : undefined
             })
         );
     }
@@ -220,8 +219,9 @@ class Auth {
                             } catch (error) {
                                 console.error(error);
                             }
+                        } else {
+                            this.navigate_url(this.config.post_login_navigate);
                         }
-                        this.navigate_url(this.config.post_login_navigate);
                     }
                 } catch (error) {
                     console.error(error)
@@ -233,7 +233,6 @@ class Auth {
     handle_token_state() {
         if (this.session.id_token) {
             this.has_id = true;
-            this.is_token_valid('id_token');
         } else {
             this.has_id = false;
         }
@@ -250,6 +249,10 @@ class Auth {
             console.error(this.session.error_description);
         } else {
             this.handle_token_state();
+            if (this.session.is_authenticated()) {
+                this.navigate_url(this.config.post_login_navigate);
+            }
+
         }
     }
 
@@ -270,7 +273,6 @@ class Auth {
                     'content-type': 'application/x-www-form-urlencoded;charset=utf-8'
                 }
             })
-            console.log(response.data);
             for (const [key, value] of Object.entries(response.data)) {
                 this.session.parse(key, value);
             }
@@ -315,7 +317,7 @@ class Auth {
                 throw "No matching key found";
             }
         } catch (error) {
-            console.log(error);
+            console.error(error);
             if (type === 'access_token') {
                 this.session.is_valid_access_token = false;
             }
@@ -340,7 +342,7 @@ class Auth {
     }
 
     verify_access_token(key, alg, payload) {
-        let token = this.session.id_token;
+        let token = this.session.access_token;
         this.session.is_valid_access_token = jws.verify(token, alg, jwktopem(key));
         this.session.access_payload = payload;
         this.session.access_exp = payload.exp;
@@ -353,7 +355,7 @@ class Auth {
     }
 
     verify_id_token(key, alg, payload) {
-        let token = this.session.access_token;
+        let token = this.session.id_token;
         this.session.is_valid_id_token = jws.verify(token, alg, jwktopem(key));
         this.session.id_payload = payload;
         this.session.id_exp = payload.exp;
@@ -371,7 +373,7 @@ class Auth {
             null;
         // Ensure nonce in id token is same as before authorization request was made
         // Ensure state in reponse is same as before authorization request was made
-        if (payload.nonce !== this.session.nonce) {
+        if (this.config.response_type.includes('id_token') && payload.nonce !== this.session.nonce) {
             this.session.is_valid_id_token = false;
         }
         // Check at_hash and c_hash
