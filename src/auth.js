@@ -233,6 +233,7 @@ class Auth {
     handle_token_state() {
         if (this.session.id_token) {
             this.has_id = true;
+            this.is_token_valid('id_token');
         } else {
             this.has_id = false;
         }
