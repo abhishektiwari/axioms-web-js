@@ -17,6 +17,30 @@ class AuthSession {
         this.saveItem('_axioms.auth.state', state);
     }
 
+    get code() {
+        return this.getItem('_axioms.auth.code');
+    }
+
+    set code(code) {
+        this.saveItem('_axioms.auth.code', code);
+    }
+
+    get code_verifier() {
+        return this.getItem('_axioms.auth.code_verifier');
+    }
+
+    set code_verifier(code_verifier) {
+        this.saveItem('_axioms.auth.code_verifier', code_verifier);
+    }
+
+    get code_challenge() {
+        return this.getItem('_axioms.auth.code_challenge');
+    }
+
+    set code_challenge(code_challenge) {
+        this.saveItem('_axioms.auth.code_challenge', code_challenge);
+    }
+
     get org() {
         return this.getItem('_axioms.auth.org', 'local');
     }
@@ -47,14 +71,6 @@ class AuthSession {
 
     set id_token(id_token) {
         this.saveItem('_axioms.auth.id_token', id_token);
-    }
-
-    get code() {
-        return this.getItem('_axioms.auth.code');
-    }
-
-    set code(code) {
-        this.saveItem('_axioms.auth.code', code);
     }
 
     get is_valid_id_token() {
@@ -137,12 +153,12 @@ class AuthSession {
         this.saveItem('_axioms.auth.token_type', token_type)
     }
 
-    get code() {
-        return this.getItem('_axioms.auth.code');
+    get keys() {
+        return JSON.parse(this.getItem('_axioms.auth.keys'));
     }
 
-    set code(code) {
-        this.saveItem('_axioms.auth.code', code);
+    set keys(keys) {
+        this.saveItem('_axioms.auth.keys', JSON.stringify(keys));
     }
 
     get expires_in() {
