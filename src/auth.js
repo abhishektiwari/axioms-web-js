@@ -282,14 +282,14 @@ class Auth {
 
     async get_jwks_keys() {
         let response;
+        let keys;
         try {
             response = await axios.get(this.jwks_endpoint);
-            let keys = response.data.keys;
+            keys = response.data.keys;
             if (!keys || !keys.length) {
                 console.error("No public keys found");
                 this.session.is_valid_id_token = false;
             } else {
-                console.log('Added keys', keys);
                 this.session.keys = keys;
             }
         } catch (error) {
