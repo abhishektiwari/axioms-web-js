@@ -49,6 +49,14 @@ class AuthSession {
         this.saveItem('_axioms.auth.id_token', id_token);
     }
 
+    get code() {
+        return this.getItem('_axioms.auth.code');
+    }
+
+    set code(code) {
+        this.saveItem('_axioms.auth.code', code);
+    }
+
     get is_valid_id_token() {
         return JSON.parse(this.getItem('_axioms.auth.is_valid_id_token'));
     }

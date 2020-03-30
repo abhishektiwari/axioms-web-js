@@ -12,6 +12,7 @@
         "url": "git+https://github.com/axioms-io/web-js.git"
     },
     "dependencies": {
+        "axios": "^0.19.2",
         "base64url": "^3.0.1",
         "core-js": "^3.4.3",
         "js-cookie": "^2.2.1",
@@ -21,7 +22,6 @@
         "nanoid": "^2.1.7",
         "qs": "^6.7.0",
         "regenerator-runtime": "^0.13.3",
-        "request": "^2.88.0",
         "url-join": "^4.0.1"
     },
     "devDependencies": {
@@ -34,7 +34,9 @@
         "expect.js": "^0.3.1",
         "mocha": "^6.2.2",
         "prettier": "^1.18.2",
-        "sinon": "^8.0.2"
+        "sinon": "^8.0.2",
+        "minimist": ">=1.2.2",
+        "acorn": "7.1.1"
     },
     "eslintConfig": {
         "root": true,

@@ -5,7 +5,7 @@ import { create_url } from "./helper";
 import nanoid from "nanoid";
 import qs from "qs";
 import jws from "jws";
-import { fetch_jwkset } from "./helper";
+import axios from "axios";
 import jwktopem from "jwk-to-pem";
 
 class Auth {
@@ -208,8 +208,10 @@ class Auth {
         if (this.has_access) {
             access_token = this.pre_process_token("access_token");
         }
-        fetch_jwkset(options)
-            .then(keys => {
+        axios.get(this.jwks_endpoint)
+            .then(response => {
+                var keys = response.data.keys;
+                console.log(response.data);
                 if (!keys || !keys.length) {
                     console.error("No public keys to verify id_token");
                     this.session.is_valid_id_token = false;
