@@ -51,7 +51,7 @@ For React specific usage please review [sample-react](https://github.com/axioms-
 
 ## Angular
 
-`Coming soon`
+For Angular specific usage please review [sample-angular](https://github.com/axioms-io/sample-angular)
 
 # API Documentation
 
