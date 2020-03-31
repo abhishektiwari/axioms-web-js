@@ -1,6 +1,6 @@
 {
     "name": "@axioms/web-js",
-    "version": "0.1.7",
+    "version": "0.1.8",
     "description": "Axioms Javascript client for web applications including Single Page Applications such as Vue, Angular, and React",
     "main": "./lib/index.js",
     "scripts": {
