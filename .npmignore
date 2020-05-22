@@ -3,3 +3,4 @@ src/
 tests/
 TODO.md
 BUILD.md
+rollup.config.js

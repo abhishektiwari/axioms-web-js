@@ -5,6 +5,17 @@ Build production version,
 npm run-script build
 ```
 
+Install rollup if not already,
+
+```
+npm install rollup --global
+```
+
+Build UMD version using rollup,
+```
+rollup -c rollup.config.js
+```
+
 # Step-2 Publish
 Increment version string in `package.json`.
 ```

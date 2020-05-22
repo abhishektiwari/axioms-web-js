@@ -70,6 +70,7 @@ class Auth {
         this.user_password_endpoint = `https://${this.config.axioms_domain}/user/settings/password`;
         this.claims_prefix = `https://${this.config.axioms_domain}/claims/`;
         this.userinfo_endpoint = `https://${this.config.axioms_domain}/oauth2/userinfo`;
+        this.passwordless_email_link_api = `https://${this.config.axioms_domain}/api/passwordless/email/link`;
 
         this.config = defaultsDeep(config, {
             login_type: "redirect",
@@ -111,6 +112,39 @@ class Auth {
         location.href = url;
     }
 
+    async login_with_email_link(email) {
+        let response;
+        let data;
+        this.session.state_cookie = nanoid();
+        this.session.nonce_cookie = nanoid();
+        data = {
+            'email': email,
+            response_type: this.config.response_type,
+            redirect_uri: this.config.redirect_uri,
+            client_id: this.config.client_id,
+            scope: this.config.scope,
+            state: this.session.state_cookie,
+            nonce: this.session.nonce_cookie
+        }
+        if (this.authorization_code) {
+            this.session.code_verifier_cookie = nanoid();
+            this.session.code_challenge_cookie = base64URL(sha256(this.session.code_verifier));
+            data['code_challenge'] = this.session.code_challenge_cookie;
+            data['code_challenge_method'] = 'S256';
+        }
+        try {
+            response = await axios({
+                method: 'post',
+                url: this.passwordless_email_link_api,
+                data: data
+            });
+            return response.data.msg;
+        } catch (error) {
+            console.error(error.response.data.msg);
+            this.session.clear_all('cookie');
+            throw new Error(error.response.data.msg);
+        }
+    }
 
     login_with_redirect(
         prompt = null,
@@ -441,10 +475,14 @@ class Auth {
             null;
         // Ensure nonce in id token is same as before authorization request was made
         // Ensure state in reponse is same as before authorization request was made
-        if (this.config.response_type.includes('id_token') && payload.nonce !== this.session.nonce) {
+        var nonce = this.session.nonce;
+        if (!nonce) {
+            nonce = this.session.nonce_cookie
+        }
+        if (this.config.response_type.includes('id_token') && (payload.nonce !== nonce)) {
             this.session.is_valid_id_token = false;
         }
-        // Check at_hash and c_hash
+        // Check at_hash, c_hash, and s_hash
     }
 }
 

@@ -1,6 +1,6 @@
 {
     "name": "@axioms/web-js",
-    "version": "0.2.2",
+    "version": "0.2.3",
     "description": "Axioms Javascript client for web applications including Single Page Applications such as Vue, Angular, and React",
     "main": "./lib/index.js",
     "scripts": {
@@ -27,15 +27,20 @@
         "url-join": "^4.0.1"
     },
     "devDependencies": {
+        "@babel/cli": "^7.8.4",
         "@babel/core": "^7.9.0",
         "@babel/preset-env": "^7.9.0",
-        "@babel/cli": "^7.8.4",
+        "@rollup/plugin-babel": "^5.0.2",
+        "@rollup/plugin-commonjs": "^12.0.0",
+        "@rollup/plugin-json": "^4.0.3",
+        "@rollup/plugin-node-resolve": "^8.0.0",
         "babel-eslint": "^10.1.0",
         "chai": "^4.2.0",
         "eslint": "^6.7.2",
         "expect.js": "^0.3.1",
         "mocha": "^6.2.2",
         "prettier": "^1.18.2",
+        "rollup": "^2.10.7",
         "sinon": "^8.0.2"
     },
     "eslintConfig": {

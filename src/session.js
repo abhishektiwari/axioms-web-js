@@ -1,7 +1,4 @@
-import {
-    Cookie,
-    Cookies
-} from 'js-cookie';
+import Cookies from 'js-cookie';
 
 class AuthSession {
     constructor(config) {
@@ -15,6 +12,14 @@ class AuthSession {
 
     set state(state) {
         this.saveItem('_axioms.auth.state', state);
+    }
+
+    get state_cookie() {
+        return this.getItem('_axioms.auth.state', 'cookie');
+    }
+
+    set state_cookie(state) {
+        this.saveItem('_axioms.auth.state', state, 'cookie');
     }
 
     get code() {
@@ -39,6 +44,22 @@ class AuthSession {
 
     set code_challenge(code_challenge) {
         this.saveItem('_axioms.auth.code_challenge', code_challenge);
+    }
+
+    get code_verifier_cookie() {
+        return this.getItem('_axioms.auth.code_verifier', 'cookie');
+    }
+
+    set code_verifier_cookie(code_verifier) {
+        this.saveItem('_axioms.auth.code_verifier', code_verifier, 'cookie');
+    }
+
+    get code_challenge_cookie() {
+        return this.getItem('_axioms.auth.code_challenge', 'cookie');
+    }
+
+    set code_challenge_cookie(code_challenge) {
+        this.saveItem('_axioms.auth.code_challenge', code_challenge, 'cookie');
     }
 
     get org() {
@@ -71,6 +92,14 @@ class AuthSession {
 
     set nonce(nonce) {
         this.saveItem('_axioms.auth.nonce', nonce);
+    }
+
+    get nonce_cookie() {
+        return this.getItem('_axioms.auth.nonce', 'cookie');
+    }
+
+    set nonce_cookie(nonce) {
+        this.saveItem('_axioms.auth.nonce', nonce, 'cookie');
     }
 
     get id_token() {
@@ -190,7 +219,7 @@ class AuthSession {
         let value;
         switch (storage_type) {
             case 'cookie':
-                value = Cookie.get(key);
+                value = Cookies.get(key);
                 break;
 
             case 'session':
@@ -205,12 +234,15 @@ class AuthSession {
     }
 
     saveItem(key, value, storage_type = 'session') {
+        var inFiveMinutes = new Date(new Date().getTime() + 5 * 60 * 1000);
         switch (storage_type) {
             case 'cookie':
                 if ([undefined, null].indexOf(value) !== -1) {
-                    Cookie.remove(key);
+                    Cookies.remove(key);
                 } else {
-                    Cookie.set(key, value);
+                    Cookies.set(key, value, {
+                        expires: inFiveMinutes
+                    });
                 }
                 break;
 
@@ -249,7 +281,7 @@ class AuthSession {
             case 'state':
                 // Validated state sent is same as recived
                 // else set to undefined
-                if (this.state == value) {
+                if (this.state == value || this.state_cookie == value) {
                     this.state = value;
                 } else {
                     this.state = undefined
@@ -338,8 +370,8 @@ class AuthSession {
     clear_errors(storage_type = 'session') {
         switch (storage_type) {
             case 'cookie':
-                Cookie.remove('_axioms.auth.error');
-                Cookie.remove('_axioms.auth.error_description');
+                Cookies.remove('_axioms.auth.error');
+                Cookies.remove('_axioms.auth.error_description');
                 break;
 
             case 'session':
