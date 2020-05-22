@@ -98,7 +98,7 @@ class AuthSession {
     }
 
     get id_scope() {
-        return JSON.parse(this.getItem('_axioms.auth.id_scope'));
+        return this.getItem('_axioms.auth.id_scope');
     }
 
     set id_scope(id_scope) {
@@ -113,44 +113,28 @@ class AuthSession {
         this.saveItem('_axioms.auth.access_token', access_token);
     }
 
-    get is_valid_access_token() {
-        return JSON.parse(this.getItem('_axioms.auth.is_valid_access_token'));
+    get orgs() {
+        return JSON.parse(this.getItem('_axioms.auth.orgs'));
     }
 
-    set is_valid_access_token(is_valid_access_token) {
-        this.saveItem('_axioms.auth.is_valid_access_token', is_valid_access_token);
+    set orgs(orgs) {
+        this.saveItem('_axioms.auth.orgs', JSON.stringify(orgs));
     }
 
-    get access_exp() {
-        return JSON.parse(this.getItem('_axioms.auth.access_exp'));
+    get roles() {
+        return JSON.parse(this.getItem('_axioms.auth.roles'));
     }
 
-    set access_exp(access_exp) {
-        this.saveItem('_axioms.auth.access_exp', access_exp);
+    set roles(roles) {
+        this.saveItem('_axioms.auth.roles', JSON.stringify(roles));
     }
 
-    get access_scope() {
-        return this.getItem('_axioms.auth.access_scope');
+    get permissions() {
+        return JSON.parse(this.getItem('_axioms.auth.permissions'));
     }
 
-    set access_scope(access_scope) {
-        this.saveItem('_axioms.auth.access_scope', access_scope);
-    }
-
-    get access_payload() {
-        return JSON.parse(this.getItem('_axioms.auth.access_payload'));
-    }
-
-    set access_payload(access_payload) {
-        this.saveItem('_axioms.auth.access_payload', JSON.stringify(access_payload));
-    }
-
-    get token_type() {
-        return this.getItem('_axioms.auth.token_type')
-    }
-
-    set token_type(token_type) {
-        this.saveItem('_axioms.auth.token_type', token_type)
+    set permissions(permissions) {
+        this.saveItem('_axioms.auth.permissions', JSON.stringify(permissions));
     }
 
     get keys() {
@@ -162,7 +146,7 @@ class AuthSession {
     }
 
     get expires_in() {
-        const expires_in = this.getItem('salte.auth.expires_in');
+        const expires_in = this.getItem('_axioms.auth.expires_in');
         return expires_in ? Number(expires_in) : null;
     }
 
@@ -280,28 +264,9 @@ class AuthSession {
         }
     }
 
-    hasAccessScope(required_scopes) {
-        if (!this.access_scope) {
-            console.error("No access token with this session")
-            return false;
-        }
-        if (Array.isArray(required_scopes)) {
-            let given_scopes = this.access_scope.split(" ");
-            for (const scope of required_scopes) {
-                if (given_scopes.includes(scope)) {
-                    return true;
-                }
-            }
-            return false;
-        } else {
-            console.error("Please pass required scopes as an array. For example: ['profile', 'x:y']!")
-            return false;
-        }
-    }
-
-    hasIdScope(required_scopes) {
+    hasScope(required_scopes) {
         if (!this.id_scope) {
-            console.error("No id token with this session")
+            console.error("No scope attribute in this session")
             return false;
         }
         if (Array.isArray(required_scopes)) {
@@ -314,6 +279,24 @@ class AuthSession {
             return false;
         } else {
             console.error("Please pass required scopes as an array. For example: ['profile', 'openid']!")
+            return false;
+        }
+    }
+
+    hasRole(required_roles) {
+        if (!this.roles) {
+            console.error("No roles attribute in this session")
+            return false;
+        }
+        if (Array.isArray(required_roles)) {
+            for (const role of required_roles) {
+                if (this.roles.includes(role)) {
+                    return true;
+                }
+            }
+            return false;
+        } else {
+            console.error("Please pass required roles as an array. For example: ['admin', 'post:editor']!")
             return false;
         }
     }

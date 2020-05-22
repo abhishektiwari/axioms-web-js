@@ -68,6 +68,7 @@ class Auth {
         this.logout_endpoint = `https://${this.config.axioms_domain}/oauth2/logout`;
         this.user_settings_endpoint = `https://${this.config.axioms_domain}/user/settings/profile`;
         this.user_password_endpoint = `https://${this.config.axioms_domain}/user/settings/password`;
+        this.claims_prefix = `https://${this.config.axioms_domain}/claims/`;
 
         this.config = defaultsDeep(config, {
             login_type: "redirect",
@@ -116,6 +117,16 @@ class Auth {
         scope = null,
         org_hint = null
     ) {
+        /* Saving next path for post login redirect */
+        let params;
+        if (window.location.search) {
+            params = qs.parse(window.location.search, {
+                ignoreQueryPrefix: true
+            });
+            if ('next' in params) {
+                localStorage.setItem('post_login_path', params['next'])
+            }
+        }
         if (this.session.error == "login_required") {
             this.session.clear_errors();
             let url = this.authorize_url(prompt, response_type, scope, org_hint);
@@ -197,7 +208,22 @@ class Auth {
                 this.login_with_redirect();
                 break;
             case "invalid_request":
-                console.error(this.session.error_description);
+                console.error(this.session.error, this.session.error_description);
+                break;
+            case "invalid_client":
+                console.error(this.session.error, this.session.error_description);
+                break;
+            case "unsupported_grant_type":
+                console.error(this.session.error, this.session.error_description);
+                break;
+            case "invalid_grant":
+                console.error(this.session.error, this.session.error_description);
+                break;
+            case "access_denied":
+                console.error(this.session.error, this.session.error_description);
+                break;
+            case "unauthorized_client":
+                console.error(this.session.error, this.session.error_description);
                 break;
             default:
                 if (this.session.state === undefined) {
@@ -220,7 +246,8 @@ class Auth {
                                 console.error(error);
                             }
                         } else {
-                            this.navigate_url(this.config.post_login_navigate);
+
+                            this.handle_post_login_navigate();
                         }
                     }
                 } catch (error) {
@@ -228,6 +255,15 @@ class Auth {
                 }
                 break;
         }
+    }
+
+    handle_post_login_navigate() {
+        var goTo = this.config.post_login_navigate;
+        if (localStorage.hasOwnProperty('next')) {
+            goTo = localStorage.getItem('next');
+            localStorage.removeItem('next');
+        }
+        this.navigate_url(goTo);
     }
 
     handle_token_state() {
@@ -238,10 +274,9 @@ class Auth {
             this.has_id = false;
         }
         if (this.session.access_token) {
-            this.access_token = true;
-            this.is_token_valid('access_token');
+            this.has_access = true;
         } else {
-            this.access_token = false;
+            this.has_access = false;
         }
     }
 
@@ -251,7 +286,7 @@ class Auth {
         } else {
             this.handle_token_state();
             if (this.session.is_authenticated()) {
-                this.navigate_url(this.config.post_login_navigate);
+                this.handle_post_login_navigate();
             }
 
         }
@@ -308,9 +343,6 @@ class Auth {
                 key => key.kty === "RSA" && key.kid == unverified_token.kid
             );
             if (key) {
-                if (type === 'access_token') {
-                    this.verify_access_token(key, unverified_token.alg, unverified_token.payload);
-                }
                 if (type === 'id_token') {
                     this.verify_id_token(key, unverified_token.alg, unverified_token.payload);
                 }
@@ -319,9 +351,6 @@ class Auth {
             }
         } catch (error) {
             console.error(error);
-            if (type === 'access_token') {
-                this.session.is_valid_access_token = false;
-            }
             if (type === 'id_token') {
                 this.session.is_valid_id_token = false;
             }
@@ -342,19 +371,6 @@ class Auth {
         return json_token;
     }
 
-    verify_access_token(key, alg, payload) {
-        let token = this.session.access_token;
-        this.session.is_valid_access_token = jws.verify(token, alg, jwktopem(key));
-        this.session.access_payload = payload;
-        this.session.access_exp = payload.exp;
-        this.session.access_scope = Object.prototype.hasOwnProperty.call(
-                payload,
-                "scope"
-            ) ?
-            payload.scope :
-            null;
-    }
-
     verify_id_token(key, alg, payload) {
         let token = this.session.id_token;
         this.session.is_valid_id_token = jws.verify(token, alg, jwktopem(key));
@@ -362,6 +378,15 @@ class Auth {
         this.session.id_exp = payload.exp;
         this.session.org = Object.prototype.hasOwnProperty.call(payload, "org") ?
             payload.org :
+            null;
+        this.session.roles = Object.prototype.hasOwnProperty.call(payload, `${this.claims_prefix}roles`) ?
+            payload[`${this.claims_prefix}roles`] :
+            null;
+        this.session.orgs = Object.prototype.hasOwnProperty.call(payload, `${this.claims_prefix}orgs`) ?
+            payload[`${this.claims_prefix}orgs`] :
+            null;
+        this.session.permissions = Object.prototype.hasOwnProperty.call(payload, `${this.claims_prefix}permissions`) ?
+            payload[`${this.claims_prefix}permissions`] :
             null;
         this.session.org_uri = Object.prototype.hasOwnProperty.call(payload, "uri") ?
             payload.uri :
