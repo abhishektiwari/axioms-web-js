@@ -125,7 +125,7 @@ class Auth {
                 ignoreQueryPrefix: true
             });
             if ('next' in params) {
-                localStorage.setItem('post_login_path', params['next'])
+                localStorage.setItem('next', params['next'])
             }
         }
         if (this.session.error == "login_required") {
