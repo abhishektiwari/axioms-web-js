@@ -1,13 +1,17 @@
 import AuthSession from "./session";
 import assign from "lodash/assign";
 import defaultsDeep from "lodash/defaultsDeep";
-import { create_url, base64URL } from "./helper";
+import {
+    create_url,
+    base64URL
+} from "./helper";
 import nanoid from "nanoid";
 import qs from "qs";
 import jws from "jws";
 import axios from "axios";
 import jwktopem from "jwk-to-pem";
 import sha256 from 'crypto-js/sha256';
+import md5 from 'crypto-js/md5';
 
 class Auth {
     /**
@@ -113,10 +117,13 @@ class Auth {
     }
 
     async login_with_email_link(email) {
+        if (!this.config.scope.includes('email')) {
+            throw new Error("email is a required scope");
+        }
         let response;
         let data;
         this.session.state_cookie = nanoid();
-        this.session.nonce_cookie = nanoid();
+        this.session.nonce_cookie = md5(email).toString();
         data = {
             'email': email,
             response_type: this.config.response_type,
@@ -474,17 +481,30 @@ class Auth {
             payload.scope :
             null;
         // Ensure nonce in id token is same as before authorization request was made
-        // Ensure state in reponse is same as before authorization request was made
+        // Ensure state in response is same as before authorization request was made
         var nonce = this.session.nonce;
         if (!nonce) {
-            nonce = this.session.nonce_cookie
+            nonce = this.session.nonce_cookie;
+            if (!nonce) {
+                this.session.is_valid_id_token = false;
+            } else {
+                /* This is passwordless flow using email link */
+                if (md5(payload.email).toString() !== nonce) {
+                    this.session.is_valid_id_token = false;
+                }
+            }
         }
         if (this.config.response_type.includes('id_token') && (payload.nonce !== nonce)) {
             this.session.is_valid_id_token = false;
         }
         // Check at_hash, c_hash, and s_hash
+
+        // Clear all cookies
+        this.session.clear_all('cookie');
     }
 }
 
-export { Auth };
+export {
+    Auth
+};
 export default Auth;
