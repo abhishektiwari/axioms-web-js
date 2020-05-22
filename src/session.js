@@ -89,6 +89,14 @@ class AuthSession {
         this.saveItem('_axioms.auth.id_payload', JSON.stringify(id_payload));
     }
 
+    get userinfo() {
+        return JSON.parse(this.getItem('_axioms.auth.userinfo'));
+    }
+
+    set userinfo(userinfo) {
+        this.saveItem('_axioms.auth.userinfo', JSON.stringify(userinfo));
+    }
+
     get id_exp() {
         return JSON.parse(this.getItem('_axioms.auth.id_exp'));
     }
@@ -297,6 +305,24 @@ class AuthSession {
             return false;
         } else {
             console.error("Please pass required roles as an array. For example: ['admin', 'post:editor']!")
+            return false;
+        }
+    }
+
+    hasPermission(required_permissions) {
+        if (!this.permissions) {
+            console.error("No permissions attribute in this session")
+            return false;
+        }
+        if (Array.isArray(required_permissions)) {
+            for (const permission of required_permissions) {
+                if (this.permissions.includes(permission)) {
+                    return true;
+                }
+            }
+            return false;
+        } else {
+            console.error("Please pass required permissions as an array. For example: ['post:create', 'post:delete']!")
             return false;
         }
     }

@@ -69,6 +69,7 @@ class Auth {
         this.user_settings_endpoint = `https://${this.config.axioms_domain}/user/settings/profile`;
         this.user_password_endpoint = `https://${this.config.axioms_domain}/user/settings/password`;
         this.claims_prefix = `https://${this.config.axioms_domain}/claims/`;
+        this.userinfo_endpoint = `https://${this.config.axioms_domain}/oauth2/userinfo`;
 
         this.config = defaultsDeep(config, {
             login_type: "redirect",
@@ -289,6 +290,43 @@ class Auth {
                 this.handle_post_login_navigate();
             }
 
+        }
+    }
+
+    async get_userinfo() {
+        let response;
+        if (!this.session.access_token) {
+            throw new Error("No valid access token in the session");
+        }
+        try {
+            response = await axios.get(this.userinfo_endpoint, {
+                headers: {
+                    'Authorization': `Bearer ${this.session.access_token}`
+                }
+            })
+            this.session.userinfo = response.data;
+            if (this.session.userinfo) {
+                var roles = Object.prototype.hasOwnProperty.call(this.session.userinfo, `${this.claims_prefix}roles`) ?
+                    this.session.userinfo[`${this.claims_prefix}roles`] :
+                    null;
+                if (roles) {
+                    this.session.roles = roles;
+                }
+                var orgs = Object.prototype.hasOwnProperty.call(this.session.userinfo, `${this.claims_prefix}orgs`) ?
+                    this.session.userinfo[`${this.claims_prefix}orgs`] :
+                    null;
+                if (orgs) {
+                    this.session.orgs = orgs;
+                }
+                var permissions = Object.prototype.hasOwnProperty.call(this.session.userinfo, `${this.claims_prefix}permissions`) ?
+                    this.session.userinfo[`${this.claims_prefix}permissions`] :
+                    null;
+                if (permissions) {
+                    this.session.permissions = permissions;
+                }
+            }
+        } catch (error) {
+            throw error;
         }
     }
 
