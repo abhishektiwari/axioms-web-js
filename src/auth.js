@@ -125,8 +125,12 @@ class Auth {
                 ignoreQueryPrefix: true
             });
             if ('next' in params) {
-                localStorage.setItem('next', params['next'])
+                this.session.next = params['next']
             }
+        }
+        /* org_hint is uuid for organization */
+        if (this.session.org && !org_hint) {
+            org_hint = this.session.org;
         }
         if (this.session.error == "login_required") {
             this.session.clear_errors();
@@ -139,8 +143,8 @@ class Auth {
         }
     }
 
-    switch_organization(org) {
-        this.login_with_redirect(null, null, null, org);
+    switch_organization(org_hint) {
+        this.login_with_redirect(null, null, null, org_hint);
     }
 
     new_access_token() {
@@ -260,9 +264,9 @@ class Auth {
 
     handle_post_login_navigate() {
         var goTo = this.config.post_login_navigate;
-        if (localStorage.hasOwnProperty('next')) {
-            goTo = localStorage.getItem('next');
-            localStorage.removeItem('next');
+        if (this.session.next) {
+            goTo = this.session.next;
+            this.session.clear_next();
         }
         this.navigate_url(goTo);
     }

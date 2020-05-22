@@ -49,6 +49,14 @@ class AuthSession {
         this.saveItem('_axioms.auth.org', org, 'local');
     }
 
+    get next() {
+        return this.getItem('_axioms.auth.next', 'local');
+    }
+
+    set next(next) {
+        this.saveItem('_axioms.auth.next', next, 'local');
+    }
+
     get org_uri() {
         return this.getItem('_axioms.auth.org_uri', 'local');
     }
@@ -344,6 +352,10 @@ class AuthSession {
                 localStorage.removeItem('_axioms.auth.error_description');
                 break;
         }
+    }
+
+    clear_next() {
+        localStorage.removeItem('_axioms.auth.next')
     }
 
     clear_all(storage_type = 'session') {
