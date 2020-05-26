@@ -11,6 +11,7 @@ import jws from "jws";
 import axios from "axios";
 import jwktopem from "jwk-to-pem";
 import sha256 from 'crypto-js/sha256';
+import cryptoHex from 'crypto-js/enc-hex';
 import md5 from 'crypto-js/md5';
 
 class Auth {
@@ -480,6 +481,24 @@ class Auth {
             ) ?
             payload.scope :
             null;
+        var at_hash = Object.prototype.hasOwnProperty.call(
+                payload,
+                "at_hash"
+            ) ?
+            payload.at_hash :
+            false;
+        var c_hash = Object.prototype.hasOwnProperty.call(
+                payload,
+                "c_hash"
+            ) ?
+            payload.c_hash :
+            false;
+        var s_hash = Object.prototype.hasOwnProperty.call(
+                payload,
+                "s_hash"
+            ) ?
+            payload.s_hash :
+            false;
         // Ensure nonce in id token is same as before authorization request was made
         // Ensure state in response is same as before authorization request was made
         var nonce = this.session.nonce;
@@ -498,9 +517,40 @@ class Auth {
             this.session.is_valid_id_token = false;
         }
         // Check at_hash, c_hash, and s_hash
+        // If not matched set is_valid_id_token to false
+        if (at_hash) {
+            console.log('at_hash');
+            if (!this.get_hash_left_half(this.session.access_token, at_hash)) {
+                this.session.is_valid_id_token = false;
+            }
+        }
+        if (c_hash) {
+            console.log('c_hash');
+            if (!this.get_hash_left_half(this.session.code, c_hash)) {
+                this.session.is_valid_id_token = false;
+            }
+        }
+        if (s_hash) {
+            console.log('s_hash');
+            if (!this.get_hash_left_half(this.session.state, s_hash)) {
+                this.session.is_valid_id_token = false;
+            }
+        }
 
         // Clear all cookies
         this.session.clear_all('cookie');
+    }
+
+    get_hash_left_half(bString, vString) {
+        var digest = cryptoHex.stringify(sha256(bString));
+        var half_length = Math.ceil(digest.length / 2);
+        var left_most = base64URL(cryptoHex.parse(digest.substring(0, half_length)));
+        if (left_most === vString) {
+            return true
+        } else {
+            return false
+        }
+
     }
 }
 
