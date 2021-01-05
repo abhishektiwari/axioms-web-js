@@ -12,7 +12,7 @@
         "url": "git+https://github.com/axioms-io/web-js.git"
     },
     "dependencies": {
-        "axios": "^0.19.2",
+        "axios": "^0.21.1",
         "base64url": "^3.0.1",
         "core-js": "^3.4.3",
         "crypto-js": "^4.0.0",
