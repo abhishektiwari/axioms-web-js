@@ -21,7 +21,7 @@
         "jwk-to-pem": "^2.0.2",
         "jws": "^3.2.2",
         "lodash": "^4.17.15",
-        "nanoid": "^2.1.7",
+        "nanoid": "^3.1.31",
         "qs": "^6.7.0",
         "regenerator-runtime": "^0.13.3",
         "url-join": "^4.0.1"
